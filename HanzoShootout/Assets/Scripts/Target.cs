@@ -10,8 +10,7 @@ public class Target : MonoBehaviour {
     private float _timeElapsed;
     private float _enableTime;
 
-    private void Start() {       
-        _timeElapsed = 0;
+    private void Start() {
         _enableTime = 0;
         Hide();
     }
@@ -21,7 +20,6 @@ public class Target : MonoBehaviour {
             GameManager.Instance.Hit();
             GameManager.Instance.DisableTarget(this);
             Hide();
-            _timeElapsed = 0;
         }
     }
 
@@ -32,7 +30,6 @@ public class Target : MonoBehaviour {
                 GameManager.Instance.Miss();
                 GameManager.Instance.DisableTarget(this);
                 Hide();
-                _timeElapsed = 0;
             }
         }
     }
@@ -46,5 +43,6 @@ public class Target : MonoBehaviour {
     public void Hide() {
         animator.SetTrigger("Hide");
         _active = false;
+        _timeElapsed = 0;
     }
 }

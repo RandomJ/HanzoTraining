@@ -10,7 +10,7 @@ public class GameManager : MonoBehaviour {
     public FirstPersonController Controller;
     public Fire Fire;
     public int ScoreChunk;
-    public int Lives;
+    public int StartingLives;
     public float TargetEnableDelay;
     public float TargetEnableTime;
     public List<Target> Targets;
@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour {
     private float _delay;
     private int _score;
     private int _multiplier;
+    private int _lives;
 
     private void Awake() {
         Instance = this;
@@ -28,13 +29,7 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Start() {
-        _score = 0;
-        _multiplier = 1;
-        _delay = 0;
-
-        for (int i = 0; i < Lives; i++) {
-            GUIManager.Instance.AddLife();
-        }
+        MainMenu();
     }
 
     private void Update() {
@@ -72,6 +67,14 @@ public class GameManager : MonoBehaviour {
         Targets.Add(target);
     }
 
+    public void MainMenu() {
+        EnableCursor();
+        Controller.enabled = false;
+        Fire.enabled = false;
+        Time.timeScale = 0;
+        GUIManager.Instance.ShowMainMenu();
+    }
+
     public void Pause() {        
         EnableCursor();
         Controller.enabled = false;
@@ -86,6 +89,26 @@ public class GameManager : MonoBehaviour {
         Controller.enabled = true;
         Time.timeScale = 1;
         GUIManager.Instance.HidePauseMenu();
+        GUIManager.Instance.HideMainMenu();
+    }
+
+    public void Restart() {
+        _score = 0;
+        _multiplier = 1;
+        _delay = 0;
+        _lives = StartingLives;
+
+        GUIManager.Instance.InitializeLives(_lives);
+        GUIManager.Instance.SetScore(_score);
+        GUIManager.Instance.SetMultiplier(_multiplier);
+
+        foreach (Target target in _activeTargets) {
+            target.Hide();
+        }
+        Targets.AddRange(_activeTargets);
+        _activeTargets.Clear();
+
+        Resume();
     }
 
     public void Quit() {
@@ -103,11 +126,11 @@ public class GameManager : MonoBehaviour {
 
     public void Miss() {
         _multiplier = 1;
-        Lives--;
+        _lives--;
 
         GUIManager.Instance.SetMultiplier(_multiplier);
 
-        if (Lives > 0) {
+        if (_lives > 0) {
             GUIManager.Instance.RemoveLife();
         } else {
 

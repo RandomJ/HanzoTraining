@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Target
+  - Boundary
   layers:
   - Default
   - TransparentFX
@@ -14,9 +15,9 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
+  - Boundary
+  - Arrow
+  - Player
   - 
   - 
   - 

@@ -22,6 +22,8 @@ public class GameManager : MonoBehaviour {
     private int _score;
     private int _multiplier;
     private int _lives;
+    private bool _paused;
+    private bool _started;
 
     private void Awake() {
         Instance = this;
@@ -33,14 +35,21 @@ public class GameManager : MonoBehaviour {
     }
 
     private void Update() {
-        if (Input.GetButton("Cancel")) {
-            Pause();
-        }
+        if (_started) {
+            if (Input.GetButtonUp("Cancel")) {
+                
+                if (_paused) {
+                    Resume();
+                } else {
+                    Pause(); 
+                }
+            }
 
-        _delay += Time.deltaTime;
-        if (_delay >= TargetEnableDelay) {
-            _delay = 0;
-            EnableRandomTarget();
+            _delay += Time.deltaTime;
+            if (_delay >= TargetEnableDelay) {
+                _delay = 0;
+                EnableRandomTarget();
+            }
         }
     }
 
@@ -69,27 +78,33 @@ public class GameManager : MonoBehaviour {
 
     public void MainMenu() {
         EnableCursor();
+        _paused = false;
+        _started = false;
         Controller.enabled = false;
         Fire.enabled = false;
         Time.timeScale = 0;
         GUIManager.Instance.ShowMainMenu();
     }
 
-    public void Pause() {        
+    public void Pause() {
         EnableCursor();
+        _paused = true;
         Controller.enabled = false;
         Fire.enabled = false;
         Time.timeScale = 0;
+        GUIManager.Instance.HideHUD();
         GUIManager.Instance.ShowPauseMenu();
     }
 
     public void Resume() {
         DisableCursor();
+        _paused = false;
         Fire.enabled = true;
         Controller.enabled = true;
         Time.timeScale = 1;
         GUIManager.Instance.HidePauseMenu();
         GUIManager.Instance.HideMainMenu();
+        GUIManager.Instance.ShowHUD();
     }
 
     public void Restart() {
@@ -97,6 +112,9 @@ public class GameManager : MonoBehaviour {
         _multiplier = 1;
         _delay = 0;
         _lives = StartingLives;
+        _paused = false;
+        _started = true;
+        Controller.ResetTransform();
 
         GUIManager.Instance.InitializeLives(_lives);
         GUIManager.Instance.SetScore(_score);

@@ -7,6 +7,7 @@ public class GUIManager : MonoBehaviour {
 
     public static GUIManager Instance;
 
+    public GameObject HUD;
     public GameObject PauseMenu;
     public GameObject MainMenu;
     public GameObject Life;
@@ -29,16 +30,13 @@ public class GUIManager : MonoBehaviour {
     }
 
     public void InitializeLives(int lives) {
-        Debug.Log(LivesContainer.childCount + " " + lives);
         for (int i = LivesContainer.childCount; i < lives; i++) {
             Instantiate(Life, LivesContainer);
-            Debug.Log("+1");
         }
     }
 
     public void RemoveLife() {
         Destroy(LivesContainer.GetChild(LivesContainer.childCount - 1).gameObject);
-        Debug.Log("-1");
     }
 
     public void SetScore(int score) {
@@ -55,6 +53,17 @@ public class GUIManager : MonoBehaviour {
         _audioSource.Play();
     }
 
+    public void ShowHUD() {
+        Score.transform.SetParent(HUD.transform);
+        Multiplier.transform.SetParent(HUD.transform);
+        LivesContainer.transform.SetParent(HUD.transform);
+        HUD.SetActive(true);
+    }
+
+    public void HideHUD() {
+        HUD.SetActive(false);
+    }
+
     public void ShowMainMenu() {
         MainMenu.SetActive(true);
     }
@@ -64,6 +73,9 @@ public class GUIManager : MonoBehaviour {
     }
 
     public void ShowPauseMenu() {
+        Score.transform.SetParent(PauseMenu.transform);
+        Multiplier.transform.SetParent(PauseMenu.transform);
+        LivesContainer.transform.SetParent(PauseMenu.transform);
         PauseMenu.SetActive(true);
     }
 

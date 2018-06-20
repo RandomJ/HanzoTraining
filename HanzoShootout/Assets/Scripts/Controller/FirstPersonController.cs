@@ -76,6 +76,14 @@ public class FirstPersonController : MonoBehaviour {
         UpdateCameraPosition();
     }
 
+    public void ResetTransform() {
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+        m_Camera.transform.localRotation = Quaternion.identity;
+        m_OriginalCameraPosition = m_Camera.transform.localPosition;
+        m_MouseLook.Init(transform, m_Camera.transform);
+    }
+
     public void GetInput() {
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
